@@ -64,7 +64,7 @@ export default function Dashboard() {
             {sessions.map((session: any) => (
               <div
                 onClick={() => navigate(`/sessions/${session._id}`)}
-                className="flex cursor-pointer transition-all hover:scale-105 bg-slate-100 p-4 rounded-md"
+                className="flex cursor-pointer mb-2 transition-all hover:scale-105 bg-slate-100 p-4 rounded-md"
               >
                 <div>
                   <BiVideo size={32} className={"text-indigo-500"} />
