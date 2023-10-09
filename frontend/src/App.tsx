@@ -1,13 +1,16 @@
 import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import SignIn from "./routes/Auth/SignIn";
-import SignUp from "./routes/Auth/SignUp";
-import { ToastContainer, toast } from "react-toastify";
+import SignIn from "./Routes/Auth/SignIn";
+import SignUp from "./Routes/Auth/SignUp";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { AuthProvider } from "./Contexts/AuthContext";
+import Dashboard from "./Routes/Dashboard";
+import Session from "./Routes/Session";
 
 const router = createBrowserRouter([
   {
     path: "/",
-    element: <div>Hello world!</div>,
+    element: <Dashboard />,
   },
   {
     path: "/signin",
@@ -16,6 +19,10 @@ const router = createBrowserRouter([
   {
     path: "/signup",
     element: <SignUp />,
+  },
+  {
+    path: "sessions/:sessionID",
+    element: <Session />,
   },
 ]);
 
@@ -34,7 +41,9 @@ function App() {
         pauseOnHover
         theme="light"
       />
-      <RouterProvider router={router} />
+      <AuthProvider>
+        <RouterProvider router={router} />
+      </AuthProvider>
     </>
   );
 }

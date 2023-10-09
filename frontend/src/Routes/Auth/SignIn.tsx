@@ -5,10 +5,12 @@ import TextInput from "../../Components/TextInput";
 import { useState } from "react";
 import axiosInstance from "../../utils/axios";
 import { toast } from "react-toastify";
+import jwtDecode from "jwt-decode";
+import { useAuth } from "../../Contexts/AuthContext";
 
 export default function SignIn() {
-  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const auth: any = useAuth();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
@@ -20,6 +22,11 @@ export default function SignIn() {
       });
       if (result.data.success) {
         toast.success("Logged In!");
+
+        let decodedToken: any = jwtDecode(result.data.token);
+        auth.setUser(decodedToken);
+        localStorage.setItem("token", result.data.token);
+
         navigate("/");
       }
     } catch (error: any) {
