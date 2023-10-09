@@ -1,0 +1,25 @@
+services:
+  server:
+    image: node
+    command: sh -c "npm install && npm run dev"
+    ports:
+      - 4000:4000
+    working_dir: /app
+    volumes:
+      - ./backend:/app
+    environment:
+      MONGODB_URI: mongodb://mongo:27017/csticket
+      PORT: 3000
+      JWT_SECRET: "somesecret"
+  # app:
+  #   image: node
+  #   command: sh -c "npm install && npm run dev",
+  #   ports:
+  #     - 3000:3000
+  #   working_dir: /app
+  #   volumes:
+  #     - ./frontend:/app
+  mongo:
+    image: mongo
+    ports:
+      - 29999:27017
