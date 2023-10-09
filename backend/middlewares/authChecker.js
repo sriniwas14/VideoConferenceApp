@@ -22,7 +22,7 @@ function authChecker(req, res, next) {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.userType = decoded?.userType;
+    req.user = decoded;
 
     next();
   } catch (error) {

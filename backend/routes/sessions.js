@@ -15,7 +15,7 @@ router.post("/", validateBody(createSession), async (req, res) => {
     const savedSession = await newSession.save();
     res.status(201).json({ success: true });
   } catch (error) {
-    res.status(500).json({ success: false });
+    res.status(500).json({ success: false, message: error?.message });
   }
 });
 
@@ -59,6 +59,45 @@ router.post("/participants", validateBody(addParticipant), async (req, res) => {
     res.status(500).json({
       success: false,
       message: "Error adding participant to the session",
+    });
+  }
+});
+
+router.get("/:id", async (req, res) => {
+  try {
+    const sessionId = req.params.id;
+    const session = await Session.findById(sessionId);
+
+    if (!session) {
+      return res
+        .status(404)
+        .json({ success: false, message: "Session not found" });
+    }
+
+    res.status(200).json({ success: true, session });
+  } catch (error) {
+    res
+      .status(500)
+      .json({ success: false, message: "Error retrieving session" });
+  }
+});
+
+router.get("/user/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const sessions = await Session.find({ createdBy: userId });
+
+    if (!sessions || sessions.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: "No sessions found for this user" });
+    }
+
+    res.status(200).json({ success: true, sessions });
+  } catch (error) {
+    res.status(500).json({
+      success: false,
+      message: "Error retrieving sessions for the user",
     });
   }
 });

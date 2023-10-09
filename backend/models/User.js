@@ -23,6 +23,7 @@ const userSchema = new Schema({
   },
   userType: {
     type: String,
+    enum: ["teacher", "student"],
     required: true,
   },
 });

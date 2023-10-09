@@ -7,7 +7,7 @@ let createUser = object({
   phone: string().min(10).max(15).required(),
   email: string().email().required(),
   password: string().min(8).required(),
-  userType: bool().required(),
+  userType: mixed().oneOf(["teacher", "student"]),
 });
 
 let loginUser = object({
@@ -19,7 +19,7 @@ let loginUser = object({
 
 let createSession = object({
   title: string().min(10).max(75).required(),
-  desc: string().min(20).max(150).required(),
+  description: string().min(20).max(150).required(),
   createdBy: mixed((value) => ObjectId.isValid(value)),
 });
 
