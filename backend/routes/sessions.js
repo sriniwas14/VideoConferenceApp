@@ -13,7 +13,7 @@ router.post("/", validateBody(createSession), async (req, res) => {
     const { title, description, createdBy } = req.body;
     const newSession = new Session({ title, description, createdBy });
     const savedSession = await newSession.save();
-    res.status(201).json({ success: true });
+    res.status(201).json({ success: true, session: newSession });
   } catch (error) {
     res.status(500).json({ success: false, message: error?.message });
   }

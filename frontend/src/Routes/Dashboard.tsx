@@ -4,9 +4,13 @@ import { useAuth } from "../Contexts/AuthContext";
 import { BiVideo } from "react-icons/bi";
 import { useNavigate } from "react-router-dom";
 import Header from "../Components/Header";
+import Modal from "../Components/Modal";
+import TextInput from "../Components/TextInput";
+import { toast } from "react-toastify";
 
 export default function Dashboard() {
   const [sessions, setSessions] = useState([]);
+  const [newSession, setNewSession] = useState(false);
   const navigate = useNavigate();
   const auth: any = useAuth();
 
@@ -24,9 +28,31 @@ export default function Dashboard() {
     } catch (error) {}
   };
 
+  const createSession = async (e: any) => {
+    e.preventDefault();
+    try {
+      const result = await axiosInstance.post("/sessions", {
+        title: e.target[0].value,
+        description: e.target[1].value,
+        createdBy: auth.user.userId,
+      });
+      if (result.data.success) {
+        toast.success("Session Created Successfully");
+        console.log("DIO ", result.data);
+        navigate(`/sessions/${result.data.session._id}`);
+      }
+    } catch (error: any) {
+      toast(error.response?.data?.error || error.response?.data?.message);
+    }
+  };
+
   return (
     <div className="h-full flex flex-col">
-      <Header />
+      <Header
+        onNewSession={() => {
+          setNewSession(true);
+        }}
+      />
       {/* Body */}
       <div className="flex h-full">
         <div className="container mx-auto flex">
@@ -52,6 +78,36 @@ export default function Dashboard() {
           </div>
         </div>
       </div>
+      {newSession ? (
+        <Modal title="Create New Session">
+          <form onSubmit={createSession}>
+            <TextInput
+              className="mb-2 mt-4"
+              type="text"
+              onChange={() => {}}
+              placeholder="Title"
+            />
+            <TextInput
+              type="text"
+              className="mb-2"
+              onChange={() => {}}
+              placeholder="Description"
+            />
+            <div className="flex">
+              <button
+                type="button"
+                className="bg-red-600 text-white active:bg-red-700 hover:bg-red-500 transition-all px-6 py-3 rounded-md mr-2 ml-auto"
+                onClick={() => setNewSession(false)}
+              >
+                Cancel
+              </button>
+              <button className="bg-slate-600 text-white active:bg-indigo-700 hover:bg-indigo-500 transition-all px-6 py-3 rounded-md">
+                Create Session
+              </button>
+            </div>
+          </form>
+        </Modal>
+      ) : null}
     </div>
   );
 }
