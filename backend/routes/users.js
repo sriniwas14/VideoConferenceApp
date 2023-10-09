@@ -49,7 +49,12 @@ router.post("/signin", validateBody(loginUser), async (req, res) => {
   }
 
   const token = jwt.sign(
-    { userId: user._id, userType: user.userType, email: user.email },
+    {
+      userId: user._id,
+      userType: user.userType,
+      name: user.name,
+      email: user.email,
+    },
     process.env.JWT_SECRET,
     { expiresIn: "8h" }
   );
